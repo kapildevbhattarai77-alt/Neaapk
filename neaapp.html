@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEA Connect - Employee Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --primary-light: #93c5fd;
+      --secondary: #10b981;
+      --accent: #f59e0b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+      --radius: 16px;
+      --transition: all 0.3s ease;
+      --bar-h: 64px;
+      --footer-h: 48px;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    body {
+      background: var(--bg);
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+      touch-action: manipulation;
+    }
+
+    /* APP CONTAINER */
+    .app {
+      width: 100%;
+      max-width: 480px;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+      box-shadow: 0 0 32px rgba(0, 0, 0, 0.1);
+    }
+
+    /* SPLASH SCREEN */
+    #splash {
+      position: absolute; 
+      inset: 0;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    
+    #splash .logo-container {
+      background: white;
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      transform: scale(0.9);
+      animation: pulse 1.5s ease-in-out infinite alternate;
+    }
+    
+    @keyframes pulse {
+      to { transform: scale(1); }
+    }
+    
+    #splash img {
+      width: 80px;
+      border-radius: 8px;
+    }
+    
+    #splash h1 {
+      color: white;
+      margin-top: 24px;
+      font-weight: 600;
+      font-size: 24px;
+      letter-spacing: 0.5px;
+    }
+    
+    #splash p {
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    
+    .progress-bar {
+      width: 240px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      margin-top: 32px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: white;
+      border-radius: 4px;
+      animation: fillProgress 2s ease-in forwards;
+    }
+    
+    @keyframes fillProgress {
+      to { width: 100%; }
+    }
+
+    /* PROFILE SETUP SCREEN */
+    #profile-setup {
+      position: absolute;
+      inset: 0;
+      background: var(--bg);
+      z-index: 90;
+      display: none;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .skip-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(0, 0, 0, 0.1);
+      border: none;
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .skip-btn:hover {
+      background: rgba(0, 0, 0, 0.15);
+    }
+    
+    .profile-header {
+      text-align: center;
+      margin: 40px 0 20px;
+    }
+    
+    .profile-header h2 {
+      color: var(--primary);
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    
+    .profile-header p {
+      color: var(--text-light);
+    }
+    
+    .profile-image-upload {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    
+    .profile-img-container {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+      border: 3px solid var(--primary);
+      box-shadow: var(--shadow);
+    }
+    
+    .profile-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .profile-img-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 6px;
+      text-align: center;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    #profile-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-group label {
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    
+    .form-group input, .form-group select {
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+    }
+    
+    .form-footer {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      flex: 1;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--text);
+    }
+    
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+    
+    /* WELCOME SCREEN */
+    #welcome {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 80;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    #welcome h2 {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    
+    #welcome p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    
+    .loading-dots {
+      display: flex;
+      margin-top: 30px;
+      gap: 8px;
+    }
+    
+    .loading-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      animation: bounce 1.5s infinite ease-in-out;
+    }
+    
+    .loading-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .loading-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* HEADER */
+    #header {
+      height: var(--bar-h);
+      background: var(--primary);
+      color: white;
+      display:flex;
+      align-items: center;
+      padding: 0 16px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 20;
+      display: none;
+    }
+    
+    #header .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    #header img {
+      height: 40px;
+      border-radius:50%;
+    }
+    
+    #header h1 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .header-profile {
+      margin-left: auto;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid white;
+      cursor: pointer;
+    }
+    
+    .header-profile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* MAIN CONTENT */
+    #main {
+      opacity: 0;
+      position: relative;
+      padding-bottom: var(--footer-h);
+      display: none;
+    }
+    
+    /* BANNER */
+    .banner-container {
+      padding: 16px;
+      position: relative;
+    }
+    
+    #banner {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    
+    #banner img {
+      width: 100%; 
+      display: block;
+      transition: var(--transition);
+    }
+    
+    #banner:hover img {
+      transform: scale(1.02);
+    }
+    
+    .banner-dots {
+      display: flex;
+      justify-content: center;
+      margin-top: 12px;
+      gap: 8px;
+    }
+    
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .dot.active {
+      background: var(--primary);
+      width: 20px;
+      border-radius: 4px;
+    }
+
+    /* SERVICES GRID */
+    .section-title {
+      padding: 16px 16px 8px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .view-all {
+      font-size: 13px;
+      color: var(--primary);
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 16px;
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      padding: 16px 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      opacity: 0;
+      transition: var(--transition);
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .card:hover::before {
+      opacity: 1;
+    }
+    
+    .card i {
+      font-size: 24px;
+      color: var(--primary);
+      margin-bottom: 12px;
+      background: rgba(37, 99, 235, 0.1);
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      margin: 0 auto 12px;
+      transition: var(--transition);
+    }
+    
+    .card:hover i {
+      transform: scale(1.1);
+      background: var(--primary);
+      color: white;
+    }
+    
+    .card span {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* PROFILE SECTION */
+    .profile-section {
+      padding: 20px;
+      margin: 20px 16px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    
+    .profile-section h3 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+      color: var(--primary);
+    }
+    
+    .profile-details {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 16px;
+    }
+    
+    .profile-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--primary);
+    }
+    
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .profile-info div {
+      margin-bottom: 8px;
+      display: flex;
+    }
+    
+    .profile-info strong {
+      min-width: 120px;
+      display: inline-block;
+      color: var(--text-light);
+    }
+    
+    .edit-profile-btn {
+      margin-top: 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .edit-profile-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* IFRAME HEADER */
+    #iframeHeader {
+      position: fixed;
+      top: 0; 
+      left: 0;
+      width: 100%;
+      height: var(--bar-h);
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transform: translateY(0);
+      transition: transform 0.3s ease;
+      z-index: 50;
+      display: none;
+    }
+    
+    #iframeHeader.hidden { 
+      transform: translateY(-100%); 
+    }
+    
+    #iframeHeader i {
+      font-size: 20px;
+      margin-right: 12px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: var(--transition);
+      z-index: 51;
+    }
+    
+    #iframeHeader i:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    #iframeHeader span {
+      font-size: 17px;
+      font-weight: 500;
+    }
+    
+    .fullscreen-toggle {
+      margin-left: auto;
+      background: rgba(255, 255, 255, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .fullscreen-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* IFRAME CONTAINER */
+    .iframe-container {
+      position: fixed;
+      top: var(--bar-h);
+      left: 0;
+      width: 100%;
+      height: calc(100% - var(--bar-h));
+      display: none;
+      z-index: 40;
+      background: white;
+    }
+    
+    .iframe-container.active {
+      display: block;
+    }
+    
+    .iframe-container.fullscreen {
+      top: 0;
+      height: 100%;
+    }
+    
+    #webview {
+      width: 100%;
+      height: 98%;
+      border: none;
+    }
+    
+    .iframe-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .iframe-loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(37, 99, 235, 0.1);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* FOOTER */
+    #footer {
+      position: fixed;
+      bottom: 0; 
+      left: 0;
+      width: 100%;
+      height: var(--footer-h);
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 13px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 10;
+      display: none;
+    }
+    
+    #footer .datetime {
+      color: var(--primary);
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    
+    #footer .date {
+      font-size: 12px;
+    }
+    
+    #footer .time {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* MODALS */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal {
+      background: white;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 500px;
+      padding: 24px;
+      box-shadow: var(--shadow-hover);
+      transform: translateY(20px);
+      transition: var(--transition);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .modal-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+    
+    /* NOTIFICATION INDICATOR */
+    .notification {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--accent);
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 4px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .card {
+        padding: 12px 8px;
+      }
+      
+      .card i {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+      
+      .card span {
+        font-size: 12px;
+      }
+      
+      #header h1 {
+        font-size: 16px;
+      }
+      
+      .profile-details {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+      
+      .profile-info div {
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 12px;
+      }
+      
+      #footer {
+        padding: 0 16px;
+        font-size: 12px;
+      }
+      
+      #footer .datetime {
+        font-size: 11px;
+      }
+    }
+    
+    @media (min-width: 901px) {
+      .app {
+        border-radius: 24px;
+        margin: 20px 0;
+        overflow: hidden;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- SPLASH SCREEN -->
+    <div id="splash">
+      <div class="logo-container">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiMyNTYzZWIiIHJ4PSIxMCIvPjxwYXRoIGQ9Ik0zMCAzMEg3MFY3MEgzMFYzMHpNNDAgNDBINjBWNjBINDBWNDB6TTUwIDUwSDUwVjUwSDUwVjUwek01MCAzMEg1MFY1MEg1MFYzMHpNNTAgNTBINTBWNzBINTBWNTB6IiBmaWxsPSIjZmZmIi8+PC9zdmc+" alt="NEA Logo">
+      </div>
+      <h1>नेपाल विद्युत प्राधिकरण</h1>
+      <p>उज्यालो नेपालको संवाहक</p>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE SETUP SCREEN -->
+    <div id="profile-setup">
+      <button class="skip-btn" id="skipBtn">Skip</button>
+      <div class="profile-header">
+        <h2>Setup Your Profile</h2>
+        <p>Add your information to personalize your experience</p>
+      </div>
+      
+      <div class="profile-image-upload">
+        <div class="profile-img-container">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGViYXIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNlNWU1ZTUiIHJ4PSI1MCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjYjliOWI5Ii8+PHJlY3QgeD0iMzAiIHk9IjY1IiB3aWR0aD0iNDAiIGhlaWdodD0iMzAiIGZpbGw9IiNiOWI5YjkiIHJ4PSI1IiByeT0iNSIvPjwvc3ZnPg==" id="profilePreview" alt="Profile Preview">
+          <div class="profile-img-overlay" onclick="document.getElementById('profileImage').click()">
+            <i class="fas fa-camera"></i> Change
+          </div>
+        </div>
+        <input type="file" id="profileImage" accept="image/*" style="display: none;">
+      </div>
+      
+      <form id="profile-form">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Enter your full name">
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email">
+        </div>
+        
+        <div class="form-group">
+          <label for="position">Position</label>
+          <input type="text" id="position" placeholder="Your position">
+        </div>
+        
+        <div class="form-group">
+          <label for="office">Working Office</label>
+          <input type="text" id="office" placeholder="Your office location">
+        </div>
+        
+        <div class="form-group">
+          <label for="staffId">Staff ID</label>
+          <input type="text" id="staffId" placeholder="Your staff identification number">
+        </div>
+        
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary" id="skipFormBtn">Skip</button>
+          <button type="button" class="btn btn-primary" id="saveProfileBtn">Save & Continue</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- WELCOME SCREEN -->
+    <div id="welcome">
+      <h2 id="welcomeMessage">Hi, NEA Connect App</h2>
+      <p>We're almost there...</p>
+      <div class="loading-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- HEADER -->
+    <div id="header">
+      <div class="logo">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0=" alt="NEA Logo">
+        <h1>NEA Connect</h1>
+      </div>
+      <div class="header-profile" id="headerProfile">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNlNWU1ZTUiIHJ4PSI1MCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjYjliOWI5Ii8+PHJlY3QgeD0iMzAiIHk9IjY1IiB3aWR0aD0iNDAiIGhlaWdodD0iMzAiIGZpbGw9IiNiOWI5YjkiIHJ4PSI1IiByeT0iNSIvPjwvc3ZnPg==" id="headerProfileImg" alt="Profile">
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main">
+      <!-- BANNER -->
+      <div class="banner-container">
+        <div id="banner">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0ODAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgNDgwIDIwMCI+PHJlY3Qgd2lkdGg9IjQ4MCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMyNTYzZWIiIHJ4PSIxNiIvPjx0ZXh0IHg9IjI0MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPk5lcGFsIEVsZWN0cmljaXR5IEF1dGhvcml0eTwvdGV4dD48L3N2Zz4=" alt="NEA Banner">
+        </div>
+        <div class="banner-dots">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+
+      <!-- PROFILE SECTION -->
+      <div class="profile-section" id="userProfileSection">
+        <h3>Your Profile</h3>
+        <div class="profile-details">
+          <div class="profile-image">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZilaWw9IiNlNWU1ZTUiIHJ4PSI1MCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjYjliOWI5Ii8+PHJlY3QgeD0iMzAiIHk9IjY1IiB3aWR0aD0iNDAiIGhlaWdodD0iMzAiIGZpbGw9IiNiOWI5YjkiIHJ4PSI1IiByeT0iNSIvPjwvc3ZnPg==" id="profileDisplayImg" alt="Profile">
+          </div>
+          <div class="profile-info">
+            <div><strong>Name:</strong> <span id="profileName">Not provided</span></div>
+            <div><strong>Email:</strong> <span id="profileEmail">Not provided</span></div>
+            <div><strong>Position:</strong> <span id="profilePosition">Not provided</span></div>
+            <div><strong>Office:</strong> <span id="profileOffice">Not provided</span></div>
+            <div><strong>Staff ID:</strong> <span id="profileStaffId">Not provided</span></div>
+          </div>
+        </div>
+        <button class="edit-profile-btn" id="editProfileBtn">
+          <i class="fas fa-edit"></i> Edit Profile
+        </button>
+      </div>
+
+      <!-- SERVICES GRID -->
+      <div class="section-title">
+        <span>Government Services</span>
+        <span class="view-all" onclick="showAllServices()">View All</span>
+      </div>
+
+      <div class="grid" id="grid">
+        <div class="card" onclick="openLink('https://intranet.nea.org.np/employee/login', 'Payroll Details')">
+          <i class="fas fa-id-card"></i>
+          <span>Payroll</span>
+        </div>
+        <div class="card" onclick="openLink('https://hris.nea.org.np/', 'HRIS')">
+          <i class="fas fa-shield-alt"></i>
+          <span>HRIS</span>
+        </div>
+        <div class="card" onclick="openLink('https://vrs.dotm.gov.np', 'Vehicle Tax')">
+          <i class="fas fa-car"></i>
+          <span>Vehicle Tax</span>
+        </div>
+        <div class="card" onclick="openLink('https://hib.gov.np', 'Health Insurance')">
+          <i class="fas fa-notes-medical"></i>
+          <span>Health Insurance</span>
+          <div class="notification">3</div>
+        </div>
+        <div class="card" onclick="openLink('https://see.ntc.net.np', 'Educational Board')">
+          <i class="fas fa-graduation-cap"></i>
+          <span>Education</span>
+        </div>
+        <div class="card" onclick="openLink('https://www.epfnepal.com.np', 'Provident Fund')">
+          <i class="fas fa-piggy-bank"></i>
+          <span>Provident Fund</span>
+        </div>
+        <div class="card" onclick="openLink('https://ssf.gov.np', 'Social Security')">
+          <i class="fas fa-users"></i>
+          <span>Social Security</span>
+        </div>
+        <div class="card" onclick="openLink('https://moha.gov.np', 'Citizenship Services')">
+          <i class="fas fa-passport"></i>
+          <span>Citizenship</span>
+          <div class="notification">1</div>
+        </div>
+      </div>
+
+      <!-- IFRAME HEADER -->
+      <div id="iframeHeader" class="hidden">
+        <i class="fas fa-arrow-left" onclick="goBack()"></i>
+        <span id="iframeTitle">Nepal Electricity Authority</span>
+        <div class="fullscreen-toggle" onclick="toggleFullscreen()">
+          <i class="fas fa-expand"></i>
+        </div>
+      </div>
+      
+      <!-- IFRAME CONTAINER -->
+      <div class="iframe-container" id="iframeContainer">
+        <div class="iframe-loading" id="iframeLoading">
+          <div class="spinner"></div>
+          <p>Loading content...</p>
+        </div>
+        <iframe id="webview" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div id="footer">
+      <div>Prepared By: Kapildev Bhattarai</div>
+      <div class="datetime">
+        <div class="date" id="date">Loading...</div>
+        <div class="time" id="time">Loading...</div>
+      </div>
+    </div>
+
+    <!-- EDIT PROFILE MODAL -->
+    <div class="modal-overlay" id="editProfileModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <button class="modal-close" onclick="closeEditProfileModal()">&times;</button>
+        </div>
+        
+        <div class="profile-image-upload">
+          <div class="profile-img-container">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNlNWU1ZTUiIHJ4PSI1MCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjYjliOWI5Ii8+PHJlY3QgeD0iMzAiIHk=" id="editProfilePreview" alt="Profile Preview">
+            <div class="profile-img-overlay" onclick="document.getElementById('editProfileImage').click()">
+              <i class="fas fa-camera"></i> Change
+            </div>
+          </div>
+          <input type="file" id="editProfileImage" accept="image/*" style="display: none;">
+        </div>
+        
+        <form id="edit-profile-form">
+          <div class="form-group">
+            <label for="editName">Full Name</label>
+            <input type="text" id="editName" placeholder="Enter your full name">
+          </div>
+          
+          <div class="form-group">
+            <label for="editEmail">Email Address</label>
+            <input type="email" id="editEmail" placeholder="Enter your email">
+          </div>
+          
+          <div class="form-group">
+            <label for="editPosition">Position</label>
+            <input type="text" id="editPosition" placeholder="Your position">
+          </div>
+          
+          <div class="form-group">
+            <label for="editOffice">Working Office</label>
+            <input type="text" id="editOffice" placeholder="Your office location">
+          </div>
+          
+          <div class="form-group">
+            <label for="editStaffId">Staff ID</label>
+            <input type="text" id="editStaffId" placeholder="Your staff identification number">
+          </div>
+          
+          <div class="form-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeEditProfileModal()">Cancel</button>
+            <button type="button" class="btn btn-primary" id="updateProfileBtn">Update Profile</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script>
+    // DOM elements
+    const splash = document.getElementById('splash');
+    const profileSetup = document.getElementById('profile-setup');
+    const welcomeScreen = document.getElementById('welcome');
+    const header = document.getElementById('header');
+    const main = document.getElementById('main');
+    const footer = document.getElementById('footer');
+    const iframeHeader = document.getElementById('iframeHeader');
+    const iframeContainer = document.getElementById('iframeContainer');
+    const webview = document.getElementById('webview');
+    const iframeLoading = document.getElementById('iframeLoading');
+    const skipBtn = document.getElementById('skipBtn');
+    const skipFormBtn = document.getElementById('skipFormBtn');
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
+    const headerProfile = document.getElementById('headerProfile');
+    const headerProfileImg = document.getElementById('headerProfileImg');
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const editProfileModal = document.getElementById('editProfileModal');
+    const updateProfileBtn = document.getElementById('updateProfileBtn');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const toast = document.getElementById('toast');
+    
+    // User data
+    let userData = {
+      name: '',
+      email: '',
+      position: '',
+      office: '',
+      staffId: '',
+      profileImage: null
+    };
+    
+    // Initialize the app
+    function init() {
+      // Check if user has already completed profile setup
+      const savedUserData = localStorage.getItem('neaUserData');
+      
+      if (savedUserData) {
+        userData = JSON.parse(savedUserData);
+        // Skip to welcome screen
+        setTimeout(() => {
+          showWelcomeScreen();
+        }, 100);
+      } else {
+        // Show profile setup after splash
+        setTimeout(() => {
+          splash.style.display = 'none';
+          profileSetup.style.display = 'flex';
+        }, 5000);
+      }
+      
+      // Set up date/time updates
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+      
+      // Add banner carousel functionality
+      initBannerCarousel();
+      
+      // Add event listeners
+      setupEventListeners();
+    }
+    
+    // Set up event listeners
+    function setupEventListeners() {
+      // Skip buttons
+      skipBtn.addEventListener('click', skipProfileSetup);
+      skipFormBtn.addEventListener('click', skipProfileSetup);
+      
+      // Save profile button
+      saveProfileBtn.addEventListener('click', saveProfile);
+      
+      // Profile image upload
+      document.getElementById('profileImage').addEventListener('change', handleProfileImageUpload);
+      document.getElementById('editProfileImage').addEventListener('change', handleEditProfileImageUpload);
+      
+      // Header profile click
+      headerProfile.addEventListener('click', () => {
+        openEditProfileModal();
+      });
+      
+      // Edit profile button
+      editProfileBtn.addEventListener('click', openEditProfileModal);
+      
+      // Update profile button
+      updateProfileBtn.addEventListener('click', updateProfile);
+    }
+    
+    // Handle profile image upload
+    function handleProfileImageUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          document.getElementById('profilePreview').src = event.target.result;
+          userData.profileImage = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    
+    // Handle edit profile image upload
+    function handleEditProfileImageUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          document.getElementById('editProfilePreview').src = event.target.result;
+          userData.profileImage = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    
+    // Save profile data
+    function saveProfile() {
+      // Get form values
+      userData.name = document.getElementById('name').value;
+      userData.email = document.getElementById('email').value;
+      userData.position = document.getElementById('position').value;
+      userData.office = document.getElementById('office').value;
+      userData.staffId = document.getElementById('staffId').value;
+      
+      // Save to localStorage
+      localStorage.setItem('neaUserData', JSON.stringify(userData));
+      
+      // Move to welcome screen
+      profileSetup.style.display = 'none';
+      showWelcomeScreen();
+    }
+    
+    // Skip profile setup
+    function skipProfileSetup() {
+      // Save empty user data
+      localStorage.setItem('neaUserData', JSON.stringify(userData));
+      
+      // Move to welcome screen
+      profileSetup.style.display = 'none';
+      showWelcomeScreen();
+    }
+    
+    // Show welcome screen
+    function showWelcomeScreen() {
+      // Set welcome message
+      if (userData.name) {
+        welcomeMessage.textContent = `Hi ${userData.name}, NEA Connect App`;
+      } else {
+        welcomeMessage.textContent = 'Hi, NEA Connect App';
+      }
+      
+      welcomeScreen.style.display = 'flex';
+      
+      // After 5 seconds, show main app
+      setTimeout(() => {
+        welcomeScreen.style.display = 'none';
+        showMainApp();
+      }, 5000);
+    }
+    
+    // Show main app
+    function showMainApp() {
+      header.style.display = 'flex';
+      main.style.display = 'block';
+      footer.style.display = 'flex';
+      
+      // Fade in main content
+      setTimeout(() => {
+        main.style.opacity = 1;
+      }, 100);
+      
+      // Update profile section
+      updateProfileDisplay();
+    }
+    
+    // Update profile display
+    function updateProfileDisplay() {
+      // Update header profile image
+      if (userData.profileImage) {
+        headerProfileImg.src = userData.profileImage;
+      }
+      
+      // Update profile section image
+      if (userData.profileImage) {
+        document.getElementById('profileDisplayImg').src = userData.profileImage;
+      }
+      
+      // Update profile information
+      document.getElementById('profileName').textContent = userData.name || 'Not provided';
+      document.getElementById('profileEmail').textContent = userData.email || 'Not provided';
+      document.getElementById('profilePosition').textContent = userData.position || 'Not provided';
+      document.getElementById('profileOffice').textContent = userData.office || 'Not provided';
+      document.getElementById('profileStaffId').textContent = userData.staffId || 'Not provided';
+    }
+    
+    // Open edit profile modal
+    function openEditProfileModal() {
+      // Fill form with current data
+      document.getElementById('editName').value = userData.name;
+      document.getElementById('editEmail').value = userData.email;
+      document.getElementById('editPosition').value = userData.position;
+      document.getElementById('editOffice').value = userData.office;
+      document.getElementById('editStaffId').value = userData.staffId;
+      
+      if (userData.profileImage) {
+        document.getElementById('editProfilePreview').src = userData.profileImage;
+      }
+      
+      // Show modal
+      editProfileModal.classList.add('active');
+    }
+    
+    // Close edit profile modal
+    function closeEditProfileModal() {
+      editProfileModal.classList.remove('active');
+    }
+    
+    // Update profile
+    function updateProfile() {
+      // Get updated values
+      userData.name = document.getElementById('editName').value;
+      userData.email = document.getElementById('editEmail').value;
+      userData.position = document.getElementById('editPosition').value;
+      userData.office = document.getElementById('editOffice').value;
+      userData.staffId = document.getElementById('editStaffId').value;
+      
+      // Save to localStorage
+      localStorage.setItem('neaUserData', JSON.stringify(userData));
+      
+      // Update display
+      updateProfileDisplay();
+      
+      // Close modal
+      closeEditProfileModal();
+      
+      // Show success message
+      showToast('Profile updated successfully!');
+    }
+    
+    // Show toast notification
+    function showToast(message) {
+      toast.textContent = message;
+      toast.style.opacity = '1';
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        toast.style.opacity = '0';
+      }, 3000);
+    }
+    
+    // Initialize banner carousel
+    function initBannerCarousel() {
+      let currentBanner = 0;
+      const dots = document.querySelectorAll('.dot');
+      const banners = [
+        'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0ODAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgNDgwIDIwMCI+PHJlY3Qgd2lkdGg9IjQ4MCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMyNTYzZWIiIHJ4PSIxNiIvPjx0ZXh0IHg9IjI0MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPk5lcGFsIEVsZWN0cmljaXR5IEF1dGhvcml0eTwvdGV4dD48L3N2Zz4=',
+        'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0ODAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgNDgwIDIwMCI+PHJlY3Qgd2lkdGg9IjQ4MCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMxMGI5ODEiIHJ4PSIxNiIvPjx0ZXh0IHg9IjI0MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJiYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPkVtcGxveWVlIFNlcnZpY2VzPC90ZXh0Pjwvc3ZnPg==',
+        'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0ODAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgNDgwIDIwMCI+PHJlY3Qgd2lkdGg9IjQ4MCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNmNTllMGIiIHJ4PSIxNiIvPjx0ZXh0IHg9IjI0MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPkdvdmVybm1lbnQgUG9ydGFsPC90ZXh0Pjwvc3ZnPg=='
+      ];
+      
+      // Rotate banners every 5 seconds
+      setInterval(() => {
+        currentBanner = (currentBanner + 1) % banners.length;
+        document.querySelector('#banner img').src = banners[currentBanner];
+        
+        // Update active dot
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentBanner);
+        });
+      }, 5000);
+    }
+    
+    // Update date and time
+    function updateDateTime() {
+      const now = new Date();
+      const options = { 
+        timeZone: 'Asia/Kathmandu',
+        weekday: 'short',
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric'
+      };
+      
+      // Format date
+      document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+      
+      // Format time
+      document.getElementById('time').textContent = now.toLocaleTimeString('en-US', { 
+        timeZone: 'Asia/Kathmandu',
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+    }
+    
+    // Open external link in iframe
+    function openLink(url, title) {
+      // Update iframe header title
+      document.getElementById('iframeTitle').textContent = title;
+      
+      // Hide main content and show iframe header and container
+      header.style.display = 'none';
+      document.getElementById('banner').style.display = 'none';
+      document.getElementById('grid').style.display = 'none';
+      document.getElementById('userProfileSection').style.display = 'none';
+      footer.style.display = 'none';
+      iframeHeader.classList.remove('hidden');
+      iframeHeader.style.display = 'flex';
+      iframeContainer.classList.add('active');
+      
+      // Show loading indicator
+      iframeLoading.style.display = 'flex';
+      
+      // Load iframe content
+      webview.onload = function() {
+        // Hide loading indicator when iframe loads
+        iframeLoading.style.display = 'none';
+      };
+      
+      webview.src = url;
+    }
+    
+    // Go back to main screen
+    function goBack() {
+      // Show main content and hide iframe header and container
+      iframeHeader.classList.add('hidden');
+      iframeContainer.classList.remove('active');
+      iframeContainer.classList.remove('fullscreen');
+      document.getElementById('banner').style.display = 'block';
+      document.getElementById('grid').style.display = 'grid';
+      document.getElementById('userProfileSection').style.display = 'block';
+      header.style.display = 'flex';
+      footer.style.display = 'flex';
+      
+      // Reset iframe
+      webview.src = '';
+    }
+    
+    // Toggle fullscreen mode
+    function toggleFullscreen() {
+      const isFullscreen = iframeContainer.classList.contains('fullscreen');
+      
+      if (isFullscreen) {
+        iframeContainer.classList.remove('fullscreen');
+        document.querySelector('.fullscreen-toggle i').className = 'fas fa-expand';
+        iframeHeader.classList.remove('hidden');
+      } else {
+        iframeContainer.classList.add('fullscreen');
+        document.querySelector('.fullscreen-toggle i').className = 'fas fa-compress';
+        iframeHeader.classList.add('hidden');
+      }
+    }
+    
+    // Show all services (demo function)
+    function showAllServices() {
+      alert('Showing all available services...');
+    }
+    
+    // Run initialization when page loads
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>
